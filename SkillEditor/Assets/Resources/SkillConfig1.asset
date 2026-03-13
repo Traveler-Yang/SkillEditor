@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98b2186dca46d549810f941f3601bc5, type: 3}
+  m_Name: SkillConfig1
+  m_EditorClassIdentifier: 
+  "\u6280\u80FDID": 0
+  "\u663E\u793A\u540D\u79F0": 
+  "\u6280\u80FD\u63CF\u8FF0": 
+  "\u76EE\u6807\u68C0\u6D4B\u7C7B\u578B": 0
+  "\u6280\u80FD\u76EE\u6807\u7C7B\u578B": 0
+  Icon: 
+  "\u6280\u80FD\u7C7B\u578B": 0
+  "CD\u65F6\u95F4": 0
+  "\u65BD\u6CD5\u8DDD\u79BB": 0
+  "\u6280\u80FD\u6307\u793A\u5668\u5F62\u72B6": 0
+  "\u8303\u56F4\u53C2\u65701": 0
+  "\u8303\u56F4\u53C2\u65702": 0
+  "\u8D44\u6E90\u6D88\u8017\u7C7B\u578B": 0
+  "\u8D44\u6E90\u6D88\u8017\u6570\u91CF": 0
+  "\u5347\u7EA7\u6240\u9700\u7B49\u7EA7": 0
+  "\u9762\u5411\u65BD\u6CD5\u65B9\u5411": 0
+  "\u91CA\u653E\u65F6\u53EF\u8F6C\u5411": 0
+  "\u91CA\u653E\u65F6\u53EF\u79FB\u52A8": 0
