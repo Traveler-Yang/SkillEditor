@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using System;
 
 public class 技能编辑器Window : EditorWindow
@@ -71,6 +72,15 @@ public class 技能编辑器Window : EditorWindow
     string ext = ".asset";
     public SkillConfigSto 配置文件;
     public SkillConfigSto last配置文件;
+
+
+    public GameObject 模型;
+    Animator ani;
+    private int 动画选择SelectIndex = 0;
+    float 当前帧;
+    private Vector2 scrollView = new Vector2(0, 0);
+    int frameSelectIndex;
+    //float frameTimeFloat;
 
     ///在Unity编辑器上方的工具栏中创建一个菜单项，点击后打开技能编辑器窗口
     [MenuItem("工具栏/技能编辑器")]
@@ -148,6 +158,68 @@ public class 技能编辑器Window : EditorWindow
             释放时可移动 = EditorGUILayout.Toggle("释放时可移动", 释放时可移动);
         }
         EditorGUILayout.EndVertical();
+
+        模型 = EditorGUILayout.ObjectField("添加角色:", 模型, typeof(GameObject), true) as GameObject;
+        if (GUILayout.Button("应用角色", GUILayout.Width(200)))
+        {
+            if (模型 == null)
+            {
+                Debug.LogError("请先添加角色模型");
+                return;
+            }
+            ani = 模型.GetComponent<Animator>();
+            if (ani == null)
+            {
+                Debug.LogError("该模型没有绑定Animator组件");
+                return;
+            }
+        }
+        if (ani != null)
+        {
+            //取到动画片段
+            var clips = ani.runtimeAnimatorController.animationClips;
+            //为动画选择下拉框的长度固定
+            动画选择SelectIndex = Mathf.Clamp(动画选择SelectIndex, 0, clips.Length);
+            string[] clipNamesArray = clips.Select(t => t.name).ToArray();
+            动画选择SelectIndex = EditorGUILayout.Popup("动画片段", 动画选择SelectIndex, clipNamesArray);
+
+            //根据选择的动画片段，取到对应的AnimationClip
+            AnimationClip clip = clips[动画选择SelectIndex];
+            //clip.SampleAnimation(ani.gameObject, frameTimeFloat);
+            //frameTimeFloat = EditorGUILayout.Slider(frameTimeFloat, 0, clip.length);
+            clip.SampleAnimation(ani.gameObject, 当前帧);
+            
+            frameSelectIndex = EditorGUILayout.IntSlider(frameSelectIndex, 0, (int)(clip.length / (1 / clip.frameRate) - 1));
+            EditorGUILayout.LabelField("动画时长:" + clip.length);
+
+            DrawFrames(clip);
+        }
+
+    }
+
+    void DrawFrames(AnimationClip clip)
+    {
+        int frameCount = (int)(clip.length / (1 / clip.frameRate));
+        float 帧绘制width = 40;
+        float 帧信息区域width = 600;
+        float 帧信息区域height = 60;
+        scrollView = EditorGUILayout.BeginScrollView(scrollView, true, true, 
+            GUILayout.Width(帧信息区域width), GUILayout.Height(帧信息区域height));
+        EditorGUILayout.BeginHorizontal();
+        for (int i = 0; i < frameCount; i++)
+        {
+            bool selected = i == frameSelectIndex;
+            string title = "" + i;
+            if (GUILayout.Button(title, selected ? GUIStyles.item_select : GUIStyles.item_normal, 
+                GUILayout.Width(帧绘制width)))
+            {
+                frameSelectIndex = selected ? -1 : i;
+            }
+            当前帧 = frameSelectIndex * (1 / clip.frameRate);
+        }
+
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndScrollView();
     }
 
     private void LoadConfig()
@@ -204,3 +276,13 @@ public class 技能编辑器Window : EditorWindow
     }
 
 }
+
+
+public static class GUIStyles 
+{
+    public static GUIStyle item_select = "MeTransitionSelectHead";
+    public static GUIStyle item_normal = "MeTransitionSelect";
+    public static GUIStyle box = "HelpBox";
+
+}
+
